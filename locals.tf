@@ -8,11 +8,7 @@ locals {
 }
 
 locals {
+  # Make sure to use only the available versions here: https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
   cluster_version = "1.21"
-  cluster_sg_name = "${local.sg_namespace}-eks-${random_string.sg_suffix.result}"
-}
-
-resource "random_string" "sg_suffix" {
-  length  = 8
-  special = false
+  cluster_sg_name = "${local.sg_namespace}-cluster"
 }

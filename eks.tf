@@ -2,13 +2,13 @@ module "eks_sg" {
   source  = "terraform-aws-modules/eks/aws"
   version = ">= 18.0"
 
-  cluster_name                    = "${local.sg_namespace}-cluster"
+  cluster_name                    = local.cluster_sg_name
   cluster_version                 = local.cluster_version
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
 
   vpc_id = module.vpc_sg.vpc_id
-  subnet_ids = module.vpc_sg.private_subnets
+  subnet_ids = concat(module.vpc_sg.private_subnets, module.vpc_sg.private_subnets)
 
   # Self Managed Node Group(s)
   self_managed_node_group_defaults = {
@@ -40,6 +40,19 @@ module "eks_sg" {
       sudo systemctl enable amazon-ssm-agent
       sudo systemctl start amazon-ssm-agent
       EOT
+    }
+  }
+
+  # Needed for Kubernetes dashboard
+  # See examples in module here: https://github.com/terraform-aws-modules/terraform-aws-eks/blob/master/node_groups.tf#L61
+  node_security_group_additional_rules = {
+    ingress_self_all = {
+      description                   = "Cluster API to node groups (Kubernetes Dashboard port only)"
+      protocol                      = "tcp"
+      from_port                     = 8443
+      to_port                       = 8443
+      type                          = "ingress"
+      source_cluster_security_group = true
     }
   }
 
