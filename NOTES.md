@@ -19,3 +19,10 @@ A list of all of the reading materials that helped me in getting the chapter up
 - [Accessing Clusters: So Many Proxies](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#so-many-proxies)
 - [Amazon EKS security group considerations](https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html)
 - [EKS Best Practices Guides - Identity and Access Management](https://aws.github.io/aws-eks-best-practices/security/docs/iam/#recommendations)
+
+
+## #3 - Role-Based Access Control (RBAC) - [Link](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-3-rbac-701ea68ecc9c)
+- [EKS Identity and Access Management](https://aws.github.io/aws-eks-best-practices/security/docs/iam/)
+- [USING IAM GROUPS TO MANAGE KUBERNETES CLUSTER ACCESS](https://www.eksworkshop.com/beginner/091_iam-groups/)
+- [Document the RBAC permissions needed to run K9s](https://github.com/derailed/k9s/issues/113)
+- [Kubernetes API Concepts - Verbs](https://kubernetes.io/docs/reference/using-api/api-concepts/#:~:text=The%20Kubernetes%20API%20verbs%20get,proxy%20support%20single%20resources%20only.)

@@ -25,3 +25,4 @@ provider "aws" {
   region = local.sg_region
 }
 
+data "aws_caller_identity" "current" {}
