@@ -22,6 +22,7 @@ module "eks_sg" {
 
       public_ip     = false
       max_size      = 5
+      min_size      = 1
       desired_size  = 1
       instance_type = "t3.medium"
       ami_id        = local.sg_ami_id

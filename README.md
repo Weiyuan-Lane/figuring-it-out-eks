@@ -141,4 +141,4 @@ aws eks --region *region* update-kubeconfig --name *cluster_name* --profile Your
 
 And your team member should have the cluster set up! Note that the above new profile `YourIntendedAWSRoleForUser` can also be used to generate the token for gaining access to the `Kubernetes Dashboard`.
 
-
+## #3.0.1 - Scalability - [Link](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-3-0-1-scalability-33edd89c3919)
