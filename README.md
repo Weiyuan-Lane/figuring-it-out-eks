@@ -2,23 +2,34 @@
 
 ## Full setup instructions (across all of the guides)
 
-- [From 1.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/1.0.0) | Run `terraform init`
-- [From 1.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/1.0.0) | Run `AWS_PROFILE=*named_profile* terraform apply`
-- [From 1.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/1.0.0) | Run `aws eks get-token --cluster-name *cluster_name* --profile *named_profile*`
-- [From 2.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/2.0.0) | Run `./bringup.sh`
+Make sure you set up the `Installation dependencies` first, before moving on to the `Deployment dependencies`.
+### Installation dependencies
+1. AWS CLI - Make sure that you have installed the AWS CLI - [Instructions](https://aws.amazon.com/cli/)
+2. AWS CLI - Configure the AWS CLI to your account credentials - [Instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
+3. Terraform CLI - Install the Terraform CLI here - [Instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+4. Helm - Install Helm - [Instructions](https://helm.sh/docs/intro/install/)
+
+### Deployment instructions
+1. [From 1.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/1.0.0) | Configure [locals.tf](https://github.com/Weiyuan-Lane/figuring-it-out-eks/blob/main/locals.tf) and [variables.tf](https://github.com/Weiyuan-Lane/figuring-it-out-eks/blob/main/variables.tf) to your desired values
+2. [From 1.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/1.0.0) | (Only for first time) Run `terraform init`
+3. [From 1.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/1.0.0) | Run `AWS_PROFILE=*named_profile* terraform apply`
+4. [From 1.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/1.0.0) | Run `aws eks get-token --cluster-name *cluster_name* --profile *named_profile*`
+5. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Run `./components.sh bringup`
+6. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Check for Ingress-Nginx NLB DNS name after deployed 
+7. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Configure [dns-terraform-module/locals.tf](https://github.com/Weiyuan-Lane/figuring-it-out-eks/blob/main/dns-terraform-module/locals.tf) by adding the DNS name of your NLB above into it. Make other necessary changes too.
+8. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | (Only for first time) Run `terraform -chdir=dns-terraform-module init`
+9. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Run `AWS_PROFILE=*named_profile* terraform -chdir=dns-terraform-module apply`
+10. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Apply custom DNS settings if not on Route 53. See [here](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-4-all-about-ingress-be59d651f11d) for more infomation.
+
+### Bringdown instructions
+1. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Run `AWS_PROFILE=*named_profile* terraform -chdir=dns-terraform-module destroy`
+2. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Run `./components.sh bringdown`
+2. [From 4.0.0](https://github.com/Weiyuan-Lane/figuring-it-out-eks/releases/tag/4.0.0) | Run `AWS_PROFILE=*named_profile* terraform destroy`
 
 ---
 
 ## #1 - Getting Started - [Link](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-1-getting-started-1132b20ae0f8)
 
-#### AWS CLI
-- Make sure that you have installed the AWS CLI - [Instructions](https://aws.amazon.com/cli/)
-- Configure the CLI to your account credentials - [Instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds)
-
-#### Terraform CLI
-- Install the CLI here - [Instructions](https://learn.hashicorp.com/tutorials/terraform/install-cli)
-
----
 
 To apply the changes from the Terraform configuration, simply run the following command ( with or without the `AWS_PROFILE` variable depending on your use of named profiles):
 ```
@@ -142,3 +153,8 @@ aws eks --region *region* update-kubeconfig --name *cluster_name* --profile Your
 And your team member should have the cluster set up! Note that the above new profile `YourIntendedAWSRoleForUser` can also be used to generate the token for gaining access to the `Kubernetes Dashboard`.
 
 ## #3.0.1 - Scalability - [Link](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-3-0-1-scalability-33edd89c3919)
+
+No additional instructions
+
+## #4 - All About Ingress - [Link](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-4-all-about-ingress-be59d651f11d)
+

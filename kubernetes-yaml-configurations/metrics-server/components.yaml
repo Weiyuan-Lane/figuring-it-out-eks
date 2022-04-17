@@ -131,6 +131,19 @@ spec:
       labels:
         k8s-app: metrics-server
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: core-nodes
+                operator: In
+                values:
+                - "true"
+      tolerations:
+      - key: "core-nodes"
+        effect: "NoSchedule"
+        operator: "Exists"
       containers:
       - args:
         - --cert-dir=/tmp

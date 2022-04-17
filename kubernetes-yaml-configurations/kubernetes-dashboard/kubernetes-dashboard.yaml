@@ -230,10 +230,18 @@ spec:
       serviceAccountName: kubernetes-dashboard
       nodeSelector:
         "kubernetes.io/os": linux
-      # Comment the following tolerations if Dashboard must not be deployed on master
       tolerations:
-        - key: node-role.kubernetes.io/master
+        - key: core-nodes
           effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: core-nodes
+                operator: In
+                values:
+                - "true"
 
 ---
 
@@ -298,10 +306,18 @@ spec:
       serviceAccountName: kubernetes-dashboard
       nodeSelector:
         "kubernetes.io/os": linux
-      # Comment the following tolerations if Dashboard must not be deployed on master
       tolerations:
-        - key: node-role.kubernetes.io/master
+        - key: core-nodes
           effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: core-nodes
+                operator: In
+                values:
+                - "true"
       volumes:
         - name: tmp-volume
           emptyDir: {}

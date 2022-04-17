@@ -17,17 +17,41 @@ module "eks_sg" {
   }
 
   self_managed_node_groups = {
+    core_config = {
+      name = local.sg_core_config
+
+      public_ip     = false
+      max_size      = 1
+      min_size      = 1
+      desired_size  = 1
+      instance_type = "t3.medium"
+      ami_id        = local.cluster_eks_x86_64_ami_id
+
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=${local.cluster_core_nodes_label} --register-with-taints ${local.cluster_core_nodes_taints}'"
+
+      post_bootstrap_user_data = <<-EOT
+      cd /tmp
+      sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+      sudo systemctl enable amazon-ssm-agent
+      sudo systemctl start amazon-ssm-agent
+      EOT
+
+      credit_specification = {
+        cpu_credits = "standard"
+      }
+    } 
+
     memory_config_one = {
-      name = "memory_config_one"
+      name = local.sg_memory_config_one
 
       public_ip     = false
       max_size      = 5
       min_size      = 1
       desired_size  = 1
       instance_type = "t3.medium"
-      ami_id        = local.sg_ami_id
+      ami_id        = local.cluster_eks_x86_64_ami_id
 
-      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
+      bootstrap_extra_args = ""
 
       post_bootstrap_user_data = <<-EOT
       cd /tmp
@@ -39,6 +63,10 @@ module "eks_sg" {
       tags = {
         "k8s.io/cluster-autoscaler/node-template/autoscaling-options/scaledownutilizationthreshold": local.sg_memory_config_one_scale_down_cpu_threshold,
         "k8s.io/cluster-autoscaler/node-template/autoscaling-options/scaledownunneededtime": local.sg_memory_config_one_scale_backoff_time,
+      }
+
+      credit_specification = {
+        cpu_credits = "standard"
       }
     }
   }
@@ -71,6 +99,69 @@ module "eks_sg" {
       to_port     = 10250
       type        = "egress"
       self        = true
+    }
+
+    ingress_self_coredns_kubeapps_pg_tcp = {
+      description = "Node to node CoreDNS (kubeapps postgres - port 5432)"
+      protocol    = "tcp"
+      from_port   = 5432
+      to_port     = 5432
+      type        = "ingress"
+      self        = true
+    }
+
+    egress_self_coredns_kubeapps_pg_tcp = {
+      description = "Node to node CoreDNS (kubeapps postgres - port 5432)"
+      protocol    = "tcp"
+      from_port   = 5432
+      to_port     = 5432
+      type        = "egress"
+      self        = true
+    }
+
+    ingress_self_coredns_cert_manager_tcp = {
+      description = "Node to node CoreDNS (cert server - port 8089)"
+      protocol    = "tcp"
+      from_port   = 8089
+      to_port     = 8089
+      type        = "ingress"
+      self        = true
+    }
+
+    egress_self_coredns_cert_manager_tcp = {
+      description = "Node to node CoreDNS (cert server - port 8089)"
+      protocol    = "tcp"
+      from_port   = 8089
+      to_port     = 8089
+      type        = "egress"
+      self        = true
+    }
+
+    ingress_self_coredns_generic_pod_tcp = {
+      description = "Node to node CoreDNS (http - port 80)"
+      protocol    = "tcp"
+      from_port   = 80
+      to_port     = 80
+      type        = "ingress"
+      self        = true
+    }
+
+    egress_self_coredns_generic_pod_tcp = {
+      description = "Node to node CoreDNS (http - port 80)"
+      protocol    = "tcp"
+      from_port   = 80
+      to_port     = 80
+      type        = "egress"
+      self        = true
+    }
+
+    egress_public_http = {
+      description      = "Node to NAT Gateway (http - port 80)"
+      protocol         = "tcp"
+      from_port        = 80
+      to_port          = 80
+      type             = "egress"
+      cidr_blocks      = ["0.0.0.0/0"]
     }
   }
 
