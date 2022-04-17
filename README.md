@@ -158,3 +158,7 @@ No additional instructions
 
 ## #4 - All About Ingress - [Link](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-4-all-about-ingress-be59d651f11d)
 
+No additional instructions
+## #4.0.1 - Limits, Taints, and Affinities - [Link](https://medium.com/@weiyuan-liu/figuring-it-out-kubernetes-eks-aws-4-0-1-limits-taints-and-affinities-8f0d954bba79)
+
+No additional instructions

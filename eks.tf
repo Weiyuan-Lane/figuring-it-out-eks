@@ -48,7 +48,7 @@ module "eks_sg" {
       max_size      = 5
       min_size      = 1
       desired_size  = 1
-      instance_type = "t3.medium"
+      instance_type = "t3.small"
       ami_id        = local.cluster_eks_x86_64_ami_id
 
       bootstrap_extra_args = ""
